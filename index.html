@@ -28,6 +28,7 @@
             background-color: #444;
             overflow: hidden;
             border: 2px solid #fff;
+            touch-action: none; /* Prevent default touch actions */
         }
 
         .car {
@@ -72,6 +73,8 @@
         let enemyCarSpeed = 5;
 
         document.addEventListener('keydown', movePlayerCar);
+        gameArea.addEventListener('touchstart', handleTouchStart);
+        gameArea.addEventListener('touchmove', handleTouchMove);
 
         function movePlayerCar(event) {
             const playerCarRect = playerCar.getBoundingClientRect();
@@ -81,6 +84,21 @@
                 playerCar.style.left = playerCarRect.left - gameAreaRect.left - 10 + 'px';
             } else if (event.key === 'ArrowRight' && playerCarRect.right < gameAreaRect.right) {
                 playerCar.style.left = playerCarRect.left - gameAreaRect.left + 10 + 'px';
+            }
+        }
+
+        function handleTouchStart(event) {
+            event.preventDefault();
+        }
+
+        function handleTouchMove(event) {
+            event.preventDefault();
+            const touch = event.touches[0];
+            const gameAreaRect = gameArea.getBoundingClientRect();
+            const touchX = touch.clientX - gameAreaRect.left;
+
+            if (touchX >= 0 && touchX <= gameAreaRect.width) {
+                playerCar.style.left = touchX - playerCar.offsetWidth / 2 + 'px';
             }
         }
 
